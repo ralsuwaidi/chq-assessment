@@ -1,18 +1,51 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { configureStore } from './redux/store';
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+  ApolloLink,
+  concat,
+} from '@apollo/client';
+
 import reportWebVitals from './reportWebVitals';
+import { configureStore } from './redux/store';
 
 const App = React.lazy(() => import(/* webpackChunkName: "App" */ './App'));
 
 const Main = () => {
+  const token = process.env.REACT_APP_PLURALSIGHT_TOKEN;
+
+  const httpLink = new HttpLink({
+    uri: 'https://paas-api.pluralsight.com/graphql',
+  });
+
+  const authMiddleware = new ApolloLink((operation, forward) => {
+    // add the authorization to the headers
+    operation.setContext({
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+
+    return forward(operation);
+  });
+
+  const client = new ApolloClient({
+    link: concat(authMiddleware, httpLink),
+    cache: new InMemoryCache(),
+  });
+
   return (
-    <Provider store={configureStore()}>
-      <Suspense fallback={<div className="loading" />}>
-        <App />
-      </Suspense>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={configureStore()}>
+        <Suspense fallback={<div className="loading" />}>
+          <App />
+        </Suspense>
+      </Provider>
+    </ApolloProvider>
   );
 };
 
