@@ -21,7 +21,7 @@ const getIndex = (value, arr, prop) => {
 const apiUrl = `${servicePath}/cakes/paging`;
 
 const orderOptions = [
-  { column: 'title', label: 'Product Name' },
+  { column: 'title', label: 'Skill Name' },
   { column: 'category', label: 'Category' },
   { column: 'status', label: 'Status' },
 ];
