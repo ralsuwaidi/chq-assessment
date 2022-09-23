@@ -4,8 +4,8 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 const Start = React.lazy(() =>
   import(/* webpackChunkName: "start" */ './start')
 );
-const Product = React.lazy(() =>
-  import(/* webpackChunkName: "pages-product" */ './product')
+const Leaderboard = React.lazy(() =>
+  import(/* webpackChunkName: "pages-leaderboard" */ './leaderboard')
 );
 const Gogo = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -16,8 +16,8 @@ const Gogo = ({ match }) => (
         render={(props) => <Start {...props} />}
       />
       <Route
-        path={`${match.url}/product`}
-        render={(props) => <Product {...props} />}
+        path={`${match.url}/leaderboard`}
+        render={(props) => <Leaderboard {...props} />}
       />
       <Redirect to="/error" />
     </Switch>
