@@ -5,7 +5,6 @@ import axios from 'axios';
 import { servicePath } from 'constants/defaultValues';
 
 import ListPageHeading from 'containers/pages/ListPageHeading';
-import AddNewModal from 'containers/pages/AddNewModal';
 import ListPageListing from 'containers/pages/ListPageListing';
 import useMousetrap from 'hooks/use-mousetrap';
 
@@ -27,11 +26,6 @@ const orderOptions = [
 ];
 const pageSizes = [4, 8, 12, 20];
 
-const categories = [
-  { label: 'Cakes', value: 'Cakes', key: 0 },
-  { label: 'Cupcakes', value: 'Cupcakes', key: 1 },
-  { label: 'Desserts', value: 'Desserts', key: 2 },
-];
 
 const DataListPages = ({ match }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -43,7 +37,6 @@ const DataListPages = ({ match }) => {
     label: 'Product Name',
   });
 
-  const [modalOpen, setModalOpen] = useState(false);
   const [totalItemCount, setTotalItemCount] = useState(0);
   const [totalPage, setTotalPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -71,6 +64,7 @@ const DataListPages = ({ match }) => {
               return { ...x, img: x.img.replace('img/', 'img/products/') };
             })
           );
+          console.log(data)
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
           setIsLoaded(true);
@@ -162,7 +156,6 @@ const DataListPages = ({ match }) => {
           heading="menu.data-list"
           displayMode={displayMode}
           changeDisplayMode={setDisplayMode}
-          handleChangeSelectAll={handleChangeSelectAll}
           changeOrderBy={(column) => {
             setSelectedOrderOption(
               orderOptions.find((x) => x.column === column)
@@ -184,12 +177,6 @@ const DataListPages = ({ match }) => {
           }}
           orderOptions={orderOptions}
           pageSizes={pageSizes}
-          toggleModal={() => setModalOpen(!modalOpen)}
-        />
-        <AddNewModal
-          modalOpen={modalOpen}
-          toggleModal={() => setModalOpen(!modalOpen)}
-          categories={categories}
         />
         <ListPageListing
           items={items}

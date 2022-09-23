@@ -4,10 +4,10 @@ import axios from 'axios';
 
 import { servicePath } from 'constants/defaultValues';
 
-import ListPageHeading from 'containers/pages/ListPageHeading';
 import AddNewModal from 'containers/pages/AddNewModal';
 import ListPageListing from 'containers/pages/ListPageListing';
 import useMousetrap from 'hooks/use-mousetrap';
+import ListPageHeadingAssessment from 'containers/pages/ListPageHeadingAssessment';
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -159,7 +159,7 @@ const ThumbListPages = ({ match }) => {
   ) : (
     <>
       <div className="disable-text-selection">
-        <ListPageHeading
+        <ListPageHeadingAssessment
           heading="menu.thumb-list"
           displayMode={displayMode}
           changeDisplayMode={setDisplayMode}
@@ -176,8 +176,6 @@ const ThumbListPages = ({ match }) => {
           match={match}
           startIndex={startIndex}
           endIndex={endIndex}
-          selectedItemsLength={selectedItems ? selectedItems.length : 0}
-          itemsLength={items ? items.length : 0}
           onSearchKey={(e) => {
             if (e.key === 'Enter') {
               setSearch(e.target.value.toLowerCase());

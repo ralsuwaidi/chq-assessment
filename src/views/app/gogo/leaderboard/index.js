@@ -20,7 +20,7 @@ const DetailsAlt = React.lazy(() =>
 const PagesProduct = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
     <Switch>
-      <Redirect exact from={`${match.url}/`} to={`${match.url}/data-list`} />
+      <Redirect exact from={`${match.url}/`} to={`${match.url}/thumb-list`} />
       <Route
         path={`${match.url}/data-list`}
         render={(props) => <DataList {...props} />}
