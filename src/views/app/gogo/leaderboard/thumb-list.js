@@ -4,10 +4,12 @@ import axios from 'axios';
 
 import { servicePath } from 'constants/defaultValues';
 
-import AddNewModal from 'containers/pages/AddNewModal';
 import ListPageListing from 'containers/pages/ListPageListing';
 import useMousetrap from 'hooks/use-mousetrap';
 import ListPageHeadingAssessment from 'containers/pages/ListPageHeadingAssessment';
+import { gql, useQuery } from '@apollo/client';
+
+
 
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
@@ -27,14 +29,8 @@ const orderOptions = [
 ];
 const pageSizes = [4, 8, 12, 20];
 
-const categories = [
-  { label: 'Cakes', value: 'Cakes', key: 0 },
-  { label: 'Cupcakes', value: 'Cupcakes', key: 1 },
-  { label: 'Desserts', value: 'Desserts', key: 2 },
-];
 
 const ThumbListPages = ({ match }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [displayMode, setDisplayMode] = useState('thumblist');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPageSize, setSelectedPageSize] = useState(8);
@@ -51,9 +47,12 @@ const ThumbListPages = ({ match }) => {
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
 
+  
+
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedPageSize, selectedOrderOption]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -66,18 +65,70 @@ const ThumbListPages = ({ match }) => {
         })
         .then((data) => {
           setTotalPage(data.totalPage);
-          setItems(
-            data.data.map((x) => {
-              return { ...x, img: x.img.replace('img/', 'img/products/') };
-            })
-          );
+          // setItems(
+          //   data.data.map((x) => {
+          //     return { ...x, img: x.img.replace('img/', 'img/products/') };
+          //   })
+          // );
           setSelectedItems([]);
           setTotalItemCount(data.totalItem);
-          setIsLoaded(true);
         });
     }
     fetchData();
   }, [selectedPageSize, currentPage, selectedOrderOption, search]);
+
+
+  const COURSE_CATALOG = gql`
+  query {
+    skillAssessmentCatalog (first: 8) {
+      nodes {
+        id
+        name
+        imageUrl
+        url
+        updatedOn
+        description
+        domain
+      }
+    }
+  }
+  `;
+  const { loading, error, data } = useQuery(COURSE_CATALOG);
+
+  console.log("loading",loading);
+  console.log("error",error);
+  if (!loading) console.log("current data",items);
+  if (!loading) console.log("data",data.skillAssessmentCatalog.nodes);
+    useEffect(() => {
+      if (!loading){
+    const PluralData = data.skillAssessmentCatalog.nodes
+    const itemList = []
+    for (let index = 0; index < PluralData.length; index +=1) {
+      const element = PluralData[index];
+
+      const item = {
+        category: element.domain,
+        date: element.updatedOn,
+        description: element.description,
+        id: 2,
+        img: element.imageUrl,
+        sales: 2,
+        status: 'PROCESSED',
+        statusColor: 'primary',
+        stock: 2,
+        title: element.name,
+      }
+
+      itemList.push(item)
+    }
+
+    console.log("test_me", itemList)
+      // Update the document title using the browser API
+    setItems(itemList)
+};
+});
+
+
 
   const onCheckItem = (event, id) => {
     if (
@@ -127,20 +178,23 @@ const ThumbListPages = ({ match }) => {
     return false;
   };
 
-  const onContextMenuClick = (e, data) => {
+  const onContextMenuClick = (e, contextData) => {
     // params : (e,data,target)
     console.log('onContextMenuClick - selected items', selectedItems);
-    console.log('onContextMenuClick - action : ', data.action);
+    console.log('onContextMenuClick - action : ', contextData.action);
   };
 
-  const onContextMenu = (e, data) => {
-    const clickedProductId = data.data;
+  const onContextMenu = (e, contextData) => {
+    const clickedProductId = contextData.data;
     if (!selectedItems.includes(clickedProductId)) {
       setSelectedItems([clickedProductId]);
     }
 
     return true;
   };
+
+
+
 
   useMousetrap(['ctrl+a', 'command+a'], () => {
     handleChangeSelectAll(false);
@@ -151,10 +205,21 @@ const ThumbListPages = ({ match }) => {
     return false;
   });
 
+  
+
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
 
-  return !isLoaded ? (
+
+
+
+
+
+
+
+    if (!data) return <p>Not found</p>;
+
+  return loading ? (
     <div className="loading" />
   ) : (
     <>
@@ -184,11 +249,6 @@ const ThumbListPages = ({ match }) => {
           orderOptions={orderOptions}
           pageSizes={pageSizes}
           toggleModal={() => setModalOpen(!modalOpen)}
-        />
-        <AddNewModal
-          modalOpen={modalOpen}
-          toggleModal={() => setModalOpen(!modalOpen)}
-          categories={categories}
         />
         <ListPageListing
           items={items}
