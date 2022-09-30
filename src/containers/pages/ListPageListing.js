@@ -14,7 +14,6 @@ const ListPageListing = ({
   items,
   displayMode,
   selectedItems,
-  onCheckItem,
   currentPage,
   totalPage,
   onContextMenuClick,
@@ -31,7 +30,6 @@ const ListPageListing = ({
               product={product}
               isSelect={selectedItems.includes(product.id)}
               collect={collect}
-              onCheckItem={onCheckItem}
             />
           );
         }
@@ -42,7 +40,6 @@ const ListPageListing = ({
               product={product}
               isSelect={selectedItems.includes(product.id)}
               collect={collect}
-              onCheckItem={onCheckItem}
             />
           );
         }
@@ -51,7 +48,6 @@ const ListPageListing = ({
             key={product.id}
             product={product}
             isSelect={selectedItems.includes(product.id)}
-            onCheckItem={onCheckItem}
             collect={collect}
           />
         );

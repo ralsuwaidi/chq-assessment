@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
 import axios from 'axios';
-
 import { servicePath } from 'constants/defaultValues';
-
 import ListPageListing from 'containers/pages/ListPageListing';
 import useMousetrap from 'hooks/use-mousetrap';
 import ListPageHeadingAssessment from 'containers/pages/ListPageHeadingAssessment';

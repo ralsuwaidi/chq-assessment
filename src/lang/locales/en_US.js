@@ -51,4 +51,12 @@ module.exports = {
   'pages.error-title': 'Ooops... looks like an error occurred!',
   'pages.error-code': 'Error code',
   'pages.go-back-home': 'GO BACK HOME',
+
+  /* 05.Plural */
+  'menu.thumb-list': 'Skill List',
+  'menu.leaderboard': 'Skill Overview',
+  'pages.orderby': 'Order by ',
+  'pages.viewing': 'viewing  ',
+  'pages.total': 'out of ',
+  'pages.display-options': 'Display options ',
 };

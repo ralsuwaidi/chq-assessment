@@ -1,16 +1,15 @@
 import React from 'react';
-import { Card, CustomInput, Badge } from 'reactstrap';
+import { Card, Badge } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import { ContextMenuTrigger } from 'react-contextmenu';
 import { Colxx } from 'components/common/CustomBootstrap';
 
-const DataListView = ({ product, isSelect, collect, onCheckItem }) => {
+const DataListView = ({ product, isSelect, collect }) => {
   return (
     <Colxx xxs="12" className="mb-3">
       <ContextMenuTrigger id="menu_id" data={product.id} collect={collect}>
         <Card
-          onClick={(event) => onCheckItem(event, product.id)}
           className={classnames('d-flex flex-row', {
             active: isSelect,
           })}
@@ -33,16 +32,6 @@ const DataListView = ({ product, isSelect, collect, onCheckItem }) => {
                   {product.status}
                 </Badge>
               </div>
-            </div>
-            <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-              <CustomInput
-                className="item-check mb-0"
-                type="checkbox"
-                id={`check_${product.id}`}
-                checked={isSelect}
-                onChange={() => {}}
-                label=""
-              />
             </div>
           </div>
         </Card>
