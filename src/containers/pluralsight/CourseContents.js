@@ -10,7 +10,6 @@ import DatatablePagination from 'components/DatatablePagination';
 import IntlMessages from 'helpers/IntlMessages';
 import { gql, useQuery } from '@apollo/client';
 
-
 function Table({ columns, data }) {
   const {
     getTableProps,
@@ -99,24 +98,23 @@ function Table({ columns, data }) {
 
 const CourseContents = () => {
   const COURSE_CATALOG = gql`
-  query {
-    courseCatalog(first: 10) {
-      nodes {
-        url
-        title
-        level
-        shortDescription
-        courseSeconds
-        averageRating
-        numberOfRatings
-        language
+    query {
+      courseCatalog(first: 10) {
+        nodes {
+          url
+          title
+          level
+          shortDescription
+          courseSeconds
+          averageRating
+          numberOfRatings
+          language
+        }
       }
     }
-  }
-`;
+  `;
 
-const { loading, error, data } = useQuery(COURSE_CATALOG);
-
+  const { loading, error, data } = useQuery(COURSE_CATALOG);
 
   const cols = React.useMemo(
     () => [
@@ -146,7 +144,7 @@ const { loading, error, data } = useQuery(COURSE_CATALOG);
   );
 
   if (loading && !error) {
-    return <p>Fetching</p>
+    return <p>Fetching</p>;
   }
 
   return (

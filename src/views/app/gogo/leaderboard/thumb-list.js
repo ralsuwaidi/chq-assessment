@@ -9,8 +9,6 @@ import useMousetrap from 'hooks/use-mousetrap';
 import ListPageHeadingAssessment from 'containers/pages/ListPageHeadingAssessment';
 import { gql, useQuery } from '@apollo/client';
 
-
-
 const getIndex = (value, arr, prop) => {
   for (let i = 0; i < arr.length; i += 1) {
     if (arr[i][prop] === value) {
@@ -29,7 +27,6 @@ const orderOptions = [
 ];
 const pageSizes = [4, 8, 12, 20];
 
-
 const ThumbListPages = ({ match }) => {
   const [displayMode, setDisplayMode] = useState('thumblist');
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,13 +43,11 @@ const ThumbListPages = ({ match }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [items, setItems] = useState([]);
   const [lastChecked, setLastChecked] = useState(null);
-
-  
+  const [after, setAfter] = useState('');
 
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedPageSize, selectedOrderOption]);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -77,58 +72,63 @@ const ThumbListPages = ({ match }) => {
     fetchData();
   }, [selectedPageSize, currentPage, selectedOrderOption, search]);
 
-
   const COURSE_CATALOG = gql`
-  query {
-    skillAssessmentCatalog (first: 8) {
-      nodes {
-        id
-        name
-        imageUrl
-        url
-        updatedOn
-        description
-        domain
+    query {
+      skillAssessmentCatalog(first: ${selectedPageSize}, after: "${after}") {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        nodes {
+          id
+          name
+          imageUrl
+          url
+          updatedOn
+          description
+          domain
+        }
       }
     }
-  }
   `;
   const { loading, error, data } = useQuery(COURSE_CATALOG);
 
-  console.log("loading",loading);
-  console.log("error",error);
-  if (!loading) console.log("current data",items);
-  if (!loading) console.log("data",data.skillAssessmentCatalog.nodes);
-    useEffect(() => {
-      if (!loading){
-    const PluralData = data.skillAssessmentCatalog.nodes
-    const itemList = []
-    for (let index = 0; index < PluralData.length; index +=1) {
-      const element = PluralData[index];
+  console.log('loading', loading);
+  console.log('error', error);
+  if (!loading) console.log('current data', items);
+  if (!loading) console.log('data', data.skillAssessmentCatalog.nodes);
 
-      const item = {
-        category: element.domain,
-        date: element.updatedOn,
-        description: element.description,
-        id: 2,
-        img: element.imageUrl,
-        sales: 2,
-        status: 'PROCESSED',
-        statusColor: 'primary',
-        stock: 2,
-        title: element.name,
+  useEffect(() => {
+    async function fetchPlural() {
+      if (data) {
+        const PluralData = data.skillAssessmentCatalog.nodes;
+        const itemList = [];
+        for (let index = 0; index < PluralData.length; index += 1) {
+          const element = PluralData[index];
+
+          const item = {
+            category: element.domain,
+            date: element.updatedOn,
+            description: element.description,
+            id: element.id,
+            img: element.imageUrl,
+            sales: 2,
+            status: 'PROCESSED',
+            statusColor: 'primary',
+            stock: 2,
+            title: element.name,
+          };
+
+          itemList.push(item);
+        }
+
+        console.log('test_me', itemList);
+        // Update the document title using the browser API
+        setItems(itemList);
       }
-
-      itemList.push(item)
     }
-
-    console.log("test_me", itemList)
-      // Update the document title using the browser API
-    setItems(itemList)
-};
-});
-
-
+    fetchPlural();
+  }, [data]);
 
   const onCheckItem = (event, id) => {
     if (
@@ -193,9 +193,6 @@ const ThumbListPages = ({ match }) => {
     return true;
   };
 
-
-
-
   useMousetrap(['ctrl+a', 'command+a'], () => {
     handleChangeSelectAll(false);
   });
@@ -205,19 +202,12 @@ const ThumbListPages = ({ match }) => {
     return false;
   });
 
-  
+  useMousetrap(['ctrl+n', 'command+n'], () => {
+    setAfter(data.skillAssessmentCatalog.pageInfo.endCursor);
+  });
 
   const startIndex = (currentPage - 1) * selectedPageSize;
   const endIndex = currentPage * selectedPageSize;
-
-
-
-
-
-
-
-
-    if (!data) return <p>Not found</p>;
 
   return loading ? (
     <div className="loading" />
