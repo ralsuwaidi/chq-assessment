@@ -84,6 +84,7 @@ const ThumbListPages = ({ match }) => {
           updatedOn
           description
           domain
+          state
         }
       }
     }
@@ -110,10 +111,11 @@ const ThumbListPages = ({ match }) => {
             id: element.id,
             img: element.imageUrl,
             sales: 2,
-            status: 'PROCESSED',
+            status: element.state,
             statusColor: 'primary',
             stock: 2,
             title: element.name,
+            url: element.url,
           };
 
           itemList.push(item);

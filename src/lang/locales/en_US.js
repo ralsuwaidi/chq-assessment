@@ -53,7 +53,7 @@ module.exports = {
   'pages.go-back-home': 'GO BACK HOME',
 
   /* 05.Plural */
-  'menu.thumb-list': 'Skill List',
+  'menu.thumb-list': 'Skill Assessment Catalogue',
   'menu.leaderboard': 'Skill Overview',
   'pages.orderby': 'Order by ',
   'pages.viewing': 'viewing  ',
